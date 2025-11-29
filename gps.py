@@ -97,7 +97,7 @@ class GPSListener(Sensor):
                             if self.previous_speed is not None:
                                 acceleration = (speed - self.previous_speed) / time_interval
                                 #print(f"Time: {raw_time}, Satellites: {num_satellites}, Latitude: {'{0:.14f}'.format(latitude)}, Longitude: {'{0:.14f}'.format(longitude)}, Altitude: {'{0:.4f}'.format(altitude)}, Speed: {speed:.2f} m/s, Acceleration: {acceleration:.2f} m/s²")
-                                data = f"E;1;API_GPS;1;;;;GPS;{raw_time};{num_satellites};{latitude};{longitude};{altitude};{speed:.2f};{acceleration:.2f}\r\n"
+                                data = f"E;1;USB_GPS;1;;;;GPS;{raw_time};{num_satellites};{latitude};{longitude};{altitude};{speed:.2f};{acceleration:.2f}\r\n"
                                 # send the data to the UDP client
                                 try:
                                     if self.stream:

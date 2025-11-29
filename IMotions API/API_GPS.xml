@@ -1,0 +1,11 @@
+<EventSource Id="USB_GPS" Version="1" Name="USB_GPS">
+	<Sample Id="GPS" Name="GPS">	
+		<Field Id="time" Range="Variable"/>
+		<Field Id="num_of_sats"	Range="Variable"/>
+		<Field Id="lat"	Range="Variable"/>
+		<Field Id="lng"	Range="Variable"/>
+		<Field Id="alt"	Range="Variable"/>
+		<Field Id="vel"	Range="Variable"/>
+		<Field Id="acc"	Range="Variable"/>
+	</Sample>
+</EventSource>

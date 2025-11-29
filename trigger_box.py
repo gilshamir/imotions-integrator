@@ -54,7 +54,7 @@ class TriggerBoxListener(Sensor):
             if line:
                 cmd = self.parse_trigger(line)
                 if cmd is not None:
-                    data = f"E;1;API_TRIGGER_BOX;1;;;;Trigger;{cmd}\r\n"
+                    data = f"E;1;Shamir_TB;1;;;;TriggerBox;{cmd}\r\n"
                     
                     # send the data to the UDP client
                     try:

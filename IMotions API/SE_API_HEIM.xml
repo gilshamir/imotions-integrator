@@ -1,0 +1,64 @@
+<EventSource Id="SEP" Version="1"  Name="SmartEye Pro">
+	<Sample Id="SEP_DX" Name="SmartEye">
+	
+		<Field Id="SEFrameNumber"    			Range="Variable"/>
+		<Field Id="SEEstimatedDelay" 			Range="Variable"/>
+		<Field Id="SETimeStamp"      			Range="Variable"/>
+		<Field Id="SEUserTimeStamp"  			Range="Variable"/>
+		<Field Id="SERealTimeClock"  			Range="Variable"/>
+		<Field Id="SEFrameRate"      			Range="Variable"/>
+		
+		<Field Id="SELeftGazeOrigin.x"      	Range="Variable"/>
+		<Field Id="SELeftGazeOrigin.y"      	Range="Variable"/>
+		<Field Id="SELeftGazeOrigin.z"      	Range="Variable"/>
+			
+		<Field Id="SERightGazeOrigin.x"     	Range="Variable"/>
+		<Field Id="SERightGazeOrigin.y"     	Range="Variable"/>
+		<Field Id="SERightGazeOrigin.z"     	Range="Variable"/>
+		
+		<Field Id="SELeftEyePosition.x"      	Range="Variable"/>
+		<Field Id="SELeftEyePosition.y"      	Range="Variable"/>
+		<Field Id="SELeftEyePosition.z"      	Range="Variable"/>
+			
+		<Field Id="SERightEyePosition.x"     	Range="Variable"/>
+		<Field Id="SERightEyePosition.y"     	Range="Variable"/>
+		<Field Id="SERightEyePosition.z"     	Range="Variable"/>
+			
+		<Field Id="SSEHeadRotationQ"        	Range="Variable"/>
+		<Field Id="SEHeadRoll"        			Range="Variable"/>
+		<Field Id="SEHeadPitch"        			Range="Variable"/>
+		<Field Id="SEHeadHeading"        		Range="Variable"/>
+			
+		<Field Id="SEHeadPosition.x"      		Range="Variable"/>
+		<Field Id="SEHeadPosition.y"      		Range="Variable"/>
+		<Field Id="SEHeadPosition.z"      		Range="Variable"/>
+		<Field Id="SEHeadPositionQ"      		Range="Variable"/>
+		
+		<Field Id="SEHeadRotationRodrigues.x"	Range="Variable"/>
+		<Field Id="SEHeadRotationRodrigues.y"   Range="Variable"/>
+		<Field Id="SEHeadRotationRodrigues.z"   Range="Variable"/>
+		
+		<Field Id="SEHeadRotationQuaternion.x"	Range="Variable"/>
+		<Field Id="SEHeadRotationQuaternion.y"  Range="Variable"/>
+		<Field Id="SEHeadRotationQuaternion.z"  Range="Variable"/>
+		<Field Id="SEHeadRotationQuaternion.w"  Range="Variable"/>
+		
+		<Field Id="SEFixation"        			Range="Variable"/>
+		<Field Id="SEBlink"        				Range="Variable"/>
+		<Field Id="SESaccade"        			Range="Variable"/>
+		
+		<Field Id="SELeftClosestWorldIntersection.intersection"      Range="Variable"/>
+		<Field Id="SELeftClosestWorldIntersection.worldPoint.x"      Range="Variable"/>
+		<Field Id="SELeftClosestWorldIntersection.worldPoint.y"      Range="Variable"/>
+		<Field Id="SELeftClosestWorldIntersection.worldPoint.z"      Range="Variable"/>
+		
+		<Field Id="SERightClosestWorldIntersection.intersection"      Range="Variable"/>
+		<Field Id="SERightClosestWorldIntersection.worldPoint.x"      Range="Variable"/>
+		<Field Id="SERightClosestWorldIntersection.worldPoint.y"      Range="Variable"/>
+		<Field Id="SERightClosestWorldIntersection.worldPoint.z"      Range="Variable"/>
+
+		<Field Id="SELeftClosestWorldIntersection.objectName"  />
+		<Field Id="SERightClosestWorldIntersection.objectName" />
+
+ </Sample>
+</EventSource>

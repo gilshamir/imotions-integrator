@@ -1,0 +1,6 @@
+<EventSource Id="Polar" Version="1" Name="Polar">
+	<Sample Id="H10" Name="H10">	
+		<Field Id="hr" Range="Variable"/>
+		<Field Id="rr"	Range="Variable"/>
+	</Sample>
+</EventSource>

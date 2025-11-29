@@ -1,0 +1,5 @@
+<EventSource Id="Shamir_TB" Version="1" Name="Shamir_TB">
+	<Sample Id="TriggerBox" Name="TriggerBox">
+		<Field Id="TB_Trigger"/>
+	</Sample>
+</EventSource>

@@ -1,0 +1,6 @@
+<EventSource Id="Garmin" Version="1" Name="Garmin">
+	<Sample Id="Vivosmart5" Name="Vivosmart5">	
+		<Field Id="hr" Range="Variable"/>
+		<Field Id="rr"	Range="Variable"/>
+	</Sample>
+</EventSource>

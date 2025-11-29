@@ -751,7 +751,7 @@ class SEListener(Sensor):
             while self.running == True:
                 packet = self.client.receive()
                 se_data = self.prepare_data(packet)
-                data = f"E;1;SE2;1;;;;SE_Data;{se_data}\r\n"
+                data = f"E;1;SEP;1;;;;SEP_DX;{se_data}\r\n"
                 #print(data)
                 if self.stream:
                     self.stream.send(data.encode())
