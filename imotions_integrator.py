@@ -84,6 +84,7 @@ class IMotionsIntegrator():
             "h10": False,
             "vivosmart5": False
         }
+        self.internet_check_stop = threading.Event()
         
         # Set window size
         self.window_width = 400
@@ -236,9 +237,31 @@ class IMotionsIntegrator():
         self.log_text.tag_configure("Success", foreground="green")
         self.log_text.pack(fill="both", expand=True, padx=5, pady=5)
 
+        status_bar = ttk.Frame(main_container)
+        status_bar.pack(fill="x", pady=(0, 2))
+        ttk.Label(status_bar, text="Internet:").pack(side="left")
+        self.internet_status = ttk.Label(
+            status_bar,
+            text="●",
+            foreground="gray",
+            width=2,
+        )
+        self.internet_status.pack(side="left", padx=(4, 0))
+        self.internet_status_text = ttk.Label(
+            status_bar,
+            text="Checking...",
+            foreground="gray",
+        )
+        self.internet_status_text.pack(side="left", padx=(2, 0))
+
         # Load config settings
         self.load_config()
         self.set_theme(self.current_theme)
+        self.internet_check_thread = threading.Thread(
+            target=self._monitor_internet_connection,
+            daemon=True,
+        )
+        self.internet_check_thread.start()
         
         self.root.mainloop()
 
@@ -265,6 +288,12 @@ class IMotionsIntegrator():
             value="dark",
             command=lambda: self.set_theme("dark"),
         )
+        themes_menu.add_radiobutton(
+            label="Pink",
+            variable=self.theme_var,
+            value="pink",
+            command=lambda: self.set_theme("pink"),
+        )
         tools_menu.add_cascade(label="Themes", menu=themes_menu)
         menu_bar.add_cascade(label="Tools", menu=tools_menu)
 
@@ -276,7 +305,7 @@ class IMotionsIntegrator():
 
     def set_theme(self, theme):
         """Apply the selected light or dark color palette to the application."""
-        if theme not in ("light", "dark"):
+        if theme not in ("light", "dark", "pink"):
             raise ValueError(f"Unsupported theme: {theme}")
 
         self.current_theme = theme
@@ -291,6 +320,16 @@ class IMotionsIntegrator():
                 "border": "#666666",
                 "connect": "#285C35",
                 "disconnect": "#6B3030",
+            }
+        elif theme == "pink":
+            colors = {
+                "background": "#FFF0F5",
+                "surface": "#FFE4EC",
+                "text": "#4A1F2D",
+                "input": "#FFF8FA",
+                "border": "#E8A5BA",
+                "connect": "#FFD1DC",
+                "disconnect": "#F2B6C6",
             }
         else:
             colors = {
@@ -464,9 +503,35 @@ class IMotionsIntegrator():
             config.write(configfile)
     
     def on_close(self):
+            self.internet_check_stop.set()
             self.save_config()
             self.disconnect()
             self.root.destroy()  # Closes the window
+
+    def _monitor_internet_connection(self):
+        """Check internet connectivity without blocking the Tkinter event loop."""
+        while not self.internet_check_stop.is_set():
+            connected = self._has_internet_connection()
+            if self.internet_check_stop.is_set():
+                return
+            self.root.after(0, lambda connected=connected: self._update_internet_status(connected))
+            self.internet_check_stop.wait(5)
+
+    @staticmethod
+    def _has_internet_connection():
+        try:
+            with socket.create_connection(("1.1.1.1", 53), timeout=2):
+                return True
+        except OSError:
+            return False
+
+    def _update_internet_status(self, connected):
+        if connected:
+            self.internet_status.configure(text="●", foreground="green")
+            self.internet_status_text.configure(text="Connected", foreground="green")
+        else:
+            self.internet_status.configure(text="●", foreground="red")
+            self.internet_status_text.configure(text="Disconnected", foreground="red")
 
     def _create_status_update_callback(self, update_method):
         """Create a callback that safely updates status from a background thread."""
