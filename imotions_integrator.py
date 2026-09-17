@@ -54,6 +54,9 @@ class IMotionsIntegrator():
         self.root.title("IMotions Integrator")
         self.root.protocol("WM_DELETE_WINDOW", self.on_close)
         self.log_text = None  # Will be set after widget creation
+        self.style = ttk.Style(self.root)
+        self.current_theme = "light"
+        self._create_menu()
 
         # Read checkbox states from config file
         self.config = configparser.ConfigParser()
@@ -235,8 +238,158 @@ class IMotionsIntegrator():
 
         # Load config settings
         self.load_config()
+        self.set_theme(self.current_theme)
         
         self.root.mainloop()
+
+    def _create_menu(self):
+        """Create the application menu bar."""
+        menu_bar = tk.Menu(self.root)
+
+        file_menu = tk.Menu(menu_bar, tearoff=False)
+        file_menu.add_command(label="Exit", command=self.on_close)
+        menu_bar.add_cascade(label="File", menu=file_menu)
+
+        tools_menu = tk.Menu(menu_bar, tearoff=False)
+        themes_menu = tk.Menu(tools_menu, tearoff=False)
+        self.theme_var = tk.StringVar(value=self.current_theme)
+        themes_menu.add_radiobutton(
+            label="Light",
+            variable=self.theme_var,
+            value="light",
+            command=lambda: self.set_theme("light"),
+        )
+        themes_menu.add_radiobutton(
+            label="Dark",
+            variable=self.theme_var,
+            value="dark",
+            command=lambda: self.set_theme("dark"),
+        )
+        tools_menu.add_cascade(label="Themes", menu=themes_menu)
+        menu_bar.add_cascade(label="Tools", menu=tools_menu)
+
+        self.menu_bar = menu_bar
+        self.file_menu = file_menu
+        self.tools_menu = tools_menu
+        self.themes_menu = themes_menu
+        self.root.configure(menu=menu_bar)
+
+    def set_theme(self, theme):
+        """Apply the selected light or dark color palette to the application."""
+        if theme not in ("light", "dark"):
+            raise ValueError(f"Unsupported theme: {theme}")
+
+        self.current_theme = theme
+        self.theme_var.set(theme)
+
+        if theme == "dark":
+            colors = {
+                "background": "#252526",
+                "surface": "#333333",
+                "text": "#F1F1F1",
+                "input": "#3C3C3C",
+                "border": "#666666",
+                "connect": "#285C35",
+                "disconnect": "#6B3030",
+            }
+        else:
+            colors = {
+                "background": "#F0F0F0",
+                "surface": "#FFFFFF",
+                "text": "#000000",
+                "input": "#FFFFFF",
+                "border": "#A0A0A0",
+                "connect": "#E8F4E8",
+                "disconnect": "#FFE8E8",
+            }
+
+        self.root.configure(background=colors["background"])
+        menu_options = {
+            "background": colors["surface"],
+            "foreground": colors["text"],
+            "activebackground": colors["border"],
+            "activeforeground": colors["text"],
+        }
+        for menu in (
+            self.menu_bar,
+            self.file_menu,
+            self.tools_menu,
+            self.themes_menu,
+        ):
+            menu.configure(**menu_options)
+        self.style.configure("TFrame", background=colors["background"])
+        self.style.configure(
+            "TLabelframe",
+            background=colors["background"],
+            foreground=colors["text"],
+        )
+        self.style.configure(
+            "TLabelframe.Label",
+            background=colors["background"],
+            foreground=colors["text"],
+        )
+        self.style.configure(
+            "TLabel",
+            background=colors["background"],
+            foreground=colors["text"],
+        )
+        self.style.configure(
+            "TEntry",
+            fieldbackground=colors["input"],
+            foreground=colors["text"],
+        )
+        self.style.configure(
+            "TSpinbox",
+            fieldbackground=colors["input"],
+            foreground=colors["text"],
+        )
+        self.style.configure(
+            "TMenubutton",
+            background=colors["surface"],
+            foreground=colors["text"],
+        )
+
+        self._apply_theme_to_widgets(self.root, colors)
+        if self.log_text is not None:
+            self.log_text.tag_configure("Normal", foreground=colors["text"])
+            self.log_text.tag_configure("Error", foreground="#FF7777")
+            self.log_text.tag_configure("Info", foreground="#6EA8FE")
+            self.log_text.tag_configure("Success", foreground="#70D890")
+
+    def _apply_theme_to_widgets(self, widget, colors):
+        """Update classic Tk widgets, which do not use ttk styles."""
+        widget_class = widget.winfo_class()
+        if widget_class in ("Frame", "Labelframe"):
+            widget.configure(background=colors["background"])
+        elif widget_class == "Label":
+            widget.configure(
+                background=colors["background"],
+                foreground=colors["text"],
+            )
+        elif widget_class == "Text":
+            widget.configure(
+                background=colors["input"],
+                foreground=colors["text"],
+                insertbackground=colors["text"],
+            )
+        elif widget_class == "Button":
+            label = widget.cget("text")
+            button_color = (
+                colors["disconnect"]
+                if label == "Disconnect"
+                else colors["connect"]
+                if label in ("Connect", "Connect to IMotions")
+                else colors["surface"]
+            )
+            widget.configure(
+                background=button_color,
+                foreground=colors["text"],
+                activebackground=colors["border"],
+                activeforeground=colors["text"],
+            )
+
+        for child in widget.winfo_children():
+            self._apply_theme_to_widgets(child, colors)
     
     def load_config(self):
 
